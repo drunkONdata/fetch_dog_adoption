@@ -1,3 +1,3 @@
 # Fetch! Dog Adoption Project
 
-Using neural network and other ML & DL methods to curate a list of similar looking dogs that are available to be adopted off a user submitted picture. 
+Provided a user submitted picture, use a neural network and other ML methods to curate a list of similar looking dogs that are available to be adopted in the United States. 
