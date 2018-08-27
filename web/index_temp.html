@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+
+{% block head %}
+<title> Fetch! Dog Adoption</title>
+{% endblock %}
+
+{% block body %}
+
+
+
+    <!-- Logo -->
+    <div class="row top2bottom2">
+      <div class="col-lg-4 col-md-4"></div>
+
+      <div class="col-lg-4 col-md-4 center-block">
+        <img class='center-block img-responsive' src="/static/img/artmagic-logo.jpg"/ max-width='50%';>
+      </div>
+
+      <div class="col-lg-4 col-md-4"></div>
+
+    </div>
+
+    <!-- Form -->
+    <div class="container">
+
+      <div class="row">
+
+          <div class="col-xl-4 col-lg-4"></div>
+
+          <div class="col-xl-4 col-lg-4 text-center">
+
+            <form method = "POST" action='/' enctype = "multipart/form-data">
+              <div class="input-group">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="submit">Find!</button>
+              </span>
+              <input type = "file" name = "file" placeholder="Upload dog!">
+            </div><!-- /input-group -->
+          </form>
+        </div>
+
+     <p id = "instructions" class="text-center"> Upload dog!</p>
+    </div>
+
+<div class="row">
+	<div class="column">
+	  <form method="POST" action="/example1">
+	    <input type="image" src="/static/img/example1.jpg", name="image" value="/static/img/example-art.jpg">
+	  </form>
+      <form method="POST" action="/example2">
+        <input type="image" src="/static/img/example2.jpg", name="image" value="/static/img/example-art.jpg">
+      </form>
+       <form method="POST" action="/example3">
+        <input type="image" src="/static/img/example3.jpg", name="image" value="/static/img/example-art.jpg">
+      </form>
+	</div>
+	<div class="column">
+	  <form method="POST" action="/example4">
+	    <input type="image" src="/static/img/example4.jpg", name="image" value="/static/img/example-art.jpg">
+	  </form>
+	  <form method="POST" action="/example5">
+	    <input type="image" src="/static/img/example5.jpg", name="image" value="/static/img/example-art.jpg">
+	  </form>
+	   <form method="POST" action="/example6">
+	    <input type="image" src="/static/img/example6.jpg", name="image" value="/static/img/example-art.jpg">
+	  </form>
+	</div>
+    <div class="column">
+	  <form method="POST" action="/example7">
+	    <input type="image" src="/static/img/example7.jpg", name="image" value="/static/img/example-art.jpg">
+	  </form>
+      <form method="POST" action="/example8">
+        <input type="image" src="/static/img/example8.jpg", name="image" value="/static/img/example-art.jpg">
+      </form>
+       <form method="POST" action="/example9">
+        <input type="image" src="/static/img/example9.jpg", name="image" value="/static/img/example-art.jpg">
+      </form>
+  </div>
+</div>
+
+
+</body>
+
+<script type="text/javascript" src="/static/js/index.js"></script>
+
+
+{% endblock %}
