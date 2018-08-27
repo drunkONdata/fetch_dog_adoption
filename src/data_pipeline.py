@@ -45,7 +45,7 @@ def extract_df(filepath):
     '''
     df = pd.read_json(filepath, lines=True)
     images = extract_image_url(df.pictures)
-    df1 = df[['orgID','animalID','name','breed','animalLocation']]
+    df1 = df[['orgID','animalID','name','animalLocation']]
     # NOTE: You loose images with this concat
     result = pd.concat([df1, images.ImageUrl], axis=1, join_axes=[df1.index])
     # Return combined dataframe and original image source dataframe
@@ -64,7 +64,7 @@ def download_images(urls):
         open('data/images/'+image_name, 'wb').write(r.content)
 
 
-def load_data():
+def load_RP_data():
     '''
     Load data from RescueGroup JSONs into Pandas dataframes and merge to single dataframe 
     INPUT: None
@@ -91,6 +91,24 @@ def load_data():
 
 
 def zip_lookup(zip_code):
+    '''
+    Find city and state from zip code. 
+    INPUT: zip code
+    OUTPUT: Returns city and state
+    '''
+    geolocator = Nominatim()
+    location = geolocator.geocode(zip_code)
+    city = location.address.split(',')[0].strip()
+    state = location.address.split(',')[1].strip()
+    return city, state
+
+
+def gps_lookup(gps):
+    '''
+    Find city and state from GPS coordinates. 
+    INPUT: zip code
+    OUTPUT: Returns city and state
+    '''
     geolocator = Nominatim()
     location = geolocator.geocode(zip_code)
     city = location.address.split(',')[0].strip()
