@@ -52,7 +52,7 @@ def extract_df(filepath):
     return result, images
 
 
-def download_images(urls, length=len(urls)):
+def download_images(urls, length=25):
     '''
     Downloads all images from Rescue Groups S3 bucket 
     INPUT: Pandas Series of URLs
@@ -70,12 +70,12 @@ def load_RG_data():
     INPUT: None
     OUTPUT: Returns 2 dataframes, one of image URLs and other of other info
     '''
-    df0, image0 = extract_df('data/h9DH7711_newpets_1.json')
-    df1, image1 = extract_df('data/h9DH7711_pets_1.json')
-    df2, image2 = extract_df('data/h9DH7711_pets_2.json')
-    df3, image3 = extract_df('data/h9DH7711_pets_3.json')
-    df4, image4 = extract_df('data/h9DH7711_pets_4.json')
-    df5, image5 = extract_df('data/h9DH7711_pets_5.json')
+    df0, image0 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_newpets_1.json')
+    df1, image1 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_pets_1.json')
+    df2, image2 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_pets_2.json')
+    df3, image3 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_pets_3.json')
+    df4, image4 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_pets_4.json')
+    df5, image5 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_pets_5.json')
 
     combined_df = df0.append([df1, df2, df3, df4, df5])
     combined_imgs = image0.append([image1, image2, image3, image4, image5])
@@ -114,3 +114,32 @@ def gps_lookup(gps):
     city = location.address.split(',')[0].strip()
     state = location.address.split(',')[1].strip()
     return city, state
+
+
+def rotate_image(filepath):
+    
+    '''Phones rotate images by changing exif data, 
+    but we really need to rotate them for processing'''
+    
+    image=Image.open(filepath)
+    try:
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation]=='Orientation':
+                break
+            exif=dict(image._getexif().items())
+    
+        if exif[orientation] == 3:
+            print('ROTATING 180')
+            image=image.rotate(180, expand=True)
+        elif exif[orientation] == 6:
+            print('ROTATING 270')
+            image=image.rotate(270, expand=True)
+        elif exif[orientation] == 8:
+            print('ROTATING 90')
+            image=image.rotate(90, expand=True)
+        image.save(filepath)
+        image.close()
+    except (AttributeError, KeyError, IndexError):
+    # cases: image don't have getexif   
+        pass
+    return(image)
