@@ -70,12 +70,12 @@ def load_RG_data():
     INPUT: None
     OUTPUT: Returns 2 dataframes, one of image URLs and other of other info
     '''
-    df0, image0 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_newpets_1.json')
-    df1, image1 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_pets_1.json')
-    df2, image2 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_pets_2.json')
-    df3, image3 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_pets_3.json')
-    df4, image4 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_pets_4.json')
-    df5, image5 = extract_df('/Users/bil2ab/galvanize/RG_JSON/h9DH7711_pets_5.json')
+    df0, image0 = extract_df('/data/h9DH7711_newpets_1.json')
+    df1, image1 = extract_df('/data/h9DH7711_pets_1.json')
+    df2, image2 = extract_df('/data/h9DH7711_pets_2.json')
+    df3, image3 = extract_df('/data/h9DH7711_pets_3.json')
+    df4, image4 = extract_df('/data/h9DH7711_pets_4.json')
+    df5, image5 = extract_df('/data/h9DH7711_pets_5.json')
 
     combined_df = df0.append([df1, df2, df3, df4, df5])
     combined_imgs = image0.append([image1, image2, image3, image4, image5])
@@ -184,11 +184,6 @@ def find_matches(pred, collection_features, images):
     return(similar_images)
 
 
-def create_np50k(combined_imgs):
-    durka = vectorize_dog_images(combined_imgs.ImageUrl.tolist(),length=50000)
-    return durka
-
-
 def display_top_matches(top_dogs):
     
     for image, score in top_dogs:
@@ -201,21 +196,21 @@ def durka():
     start = time.time()
     combined_df, combined_imgs = load_RG_data()
     #num_images = len(glob.glob1('/Users/bil2ab/galvanize/RG5kimages/','*.jpg'))
-    image_path_list = combined_imgs.ImageUrl.tolist()
-    feature_matrix = np.zeros((len(image_path_list),4096))
+    image_path_list = combined_imgs.ImageUrl
+    feature_matrix = np.zeros((140741,4096))
     
-    for idx,url in enumerate(image_path_list):
-        dog = load_img('/Users/bil2ab/galvanize/RG5kimages/'+url.split('/')[-1], target_size=(224, 224))
+    for idx,url in enumerate(image_path_list.tolist()[0:140741]):
+        dog = load_img('/data/images/'+url.split('/')[-1], target_size=(224, 224))
         image_batch = np.expand_dims(img_to_array(dog), axis=0)  
         processed_image = vgg16.preprocess_input(image_batch.copy())
         feature_matrix[idx] = model.predict(processed_image)
     
     #Save csv of image urls
-    image_path_list.to_csv('/data/dog_urls_test.csv')
+    image_path_list.to_csv('/data/fetch_img_urls.csv')
     
     #Save list of feature arrays as numpy data file
     #doggie = np.asarray(feature_array_list)
-    np.save('/data/doggie_features_test', feature_matrix)
+    np.save('/data/fetch_feature_matrix', feature_matrix)
     
     end = time.time()
     print('Total Time: '+str(end-start))
