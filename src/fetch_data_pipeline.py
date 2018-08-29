@@ -143,3 +143,83 @@ def rotate_image(filepath):
     # cases: image don't have getexif   
         pass
     return(image)
+
+
+def vectorize_dog_images(image_path_list, length=25):
+    '''
+    Take collection of dog images and vectorize each image to a 1D NumPy array. 
+    INPUT: List, Pandas Series, some iterable of filepaths to dog images (strings)
+    OUTPUT: Returns Numpy data file
+    '''
+    start = time.time()
+    feature_array_list = []
+    #image_path_list formerly combined_df.ImageUrl[0:4750]
+    for url in image_path_list[0:length]:
+        image_path = 'data/images/'+url.split('/')[-1]
+        dog = load_img(image_path, target_size=(224, 224))
+        numpy_image = img_to_array(dog)
+        image_batch = np.expand_dims(numpy_image, axis=0)  
+        processed_image = vgg16.preprocess_input(image_batch.copy())
+        feature_array = model.predict(processed_image)
+        feature_array_list.append(feature_array)
+        #doggie = np.asarray(feature_array_list)
+        #np.save('data/RG_features', doggie)
+    end = time.time()
+    total_time = end-start
+    print('Total Time: '+str(total_time))
+    print('All dog features vectorized!')
+    return feature_array_list
+
+
+def similarity(user_image, feature_array_collection):
+    '''
+    Calculate cosine similarity between user submitted image and entire adoptable dog corpus 
+    INPUT: User submitted image in form of feature vector (NumPy Array, 1D x 4096 features)
+    OUTPUT: Returns list of cosine similarity scores between user submitted image and entire adoptable dog corpus
+    '''
+    results = []
+    for feature_array in feature_array_collection:
+        results.append(distance.cosine(user_image.flatten(),feature_array.flatten()))
+    #print('Max Similarity Score = ' +str(max(results))
+    #similar_images=pd.DataFrame({'imgfile':images,'simscore':sims})
+    return results
+    
+
+def top_matches(results, imageURLs, num_top_matches):
+    '''
+    Creates zipped list of image files and similarity scores. 
+    INPUT: Similarity scores (list), imageURLs (Pandas Series), top_matches (int)
+    OUTPUT: Returns similarity scores and images urls (Pandas Dataframe)
+    '''
+    zipped_dogs = list(zip(imageURLs.tolist(),results))
+    sorted_zipped_dogs = sorted(zipped_dogs, key = lambda t: t[1])
+    #num_top_matches=10
+    return sorted_zipped_dogs[0:num_top_matches]
+    #return pd.DataFrame({'Image_URLs':sorted_zipped_dogs[0],'Similarity_Score':sorted_zipped_dogs[1]})
+
+
+def find_matches(pred, collection_features, images):
+    pred = pred.flatten()
+    nimages = len(collection_features)
+    #vectorize cosine similarity
+    #sims= inner(pred,collection_features)/norm(pred)/norm(collection_features,axis=1)
+    sims = []
+    for i in range(0,nimages):
+        sims.append(distance.cosine(pred.flatten(),collection_features[i].flatten()))
+    print('max sim = ' +str(max(sims)))
+    similar_images=pd.DataFrame({'imgfile':images,'simscore':sims})
+    return(similar_images)
+
+
+def create_np50k(combined_imgs):
+    durka = vectorize_dog_images(combined_imgs.ImageUrl.tolist(),length=50000)
+    return durka
+
+
+def display_top_matches(top_dogs):
+    
+    for image, score in top_dogs:
+        plt.imshow(load_img('/Users/bil2ab/galvanize/RG5kimages/'+image.split('/')[-1]))
+        plt.show()
+        print(1-score)
+

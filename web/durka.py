@@ -3,7 +3,6 @@ import numpy as np
 import tensorflow as tf
 import pandas as pd
 import flask
-#import igraph
 
 from werkzeug.utils import secure_filename
 from PIL import ExifTags, Image
@@ -17,7 +16,7 @@ from numpy.linalg import norm
 
 #from artmagic import app
 #from artmagic.models.similarity import find_matches
-#from fetch.data_mangement.durka import rotate_image
+from src.fetch_data_pipeline import rotate_image, similarity, top_matches
 
 from flask import Flask, request, redirect, url_for, render_template
 
@@ -34,9 +33,6 @@ collection_features = np.load(os.path.join(app.config['DATA_FOLDER'], 'doggie_fe
 files_and_titles=pd.read_csv(os.path.join(app.config['DATA_FOLDER'], 'img_urls.csv'))
                             
 
-
-
-
 # Initialize NN with classification layer and fully connected layer dropped
 model = VGG16(include_top=True, weights='imagenet')
 model.layers.pop()
@@ -48,35 +44,6 @@ model.outputs = [model.layers[-1].output]
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
-
-def rotate_image(filepath):
-    
-    '''Phones rotate images by changing exif data, 
-    but we really need to rotate them for processing'''
-    
-    image=Image.open(filepath)
-    try:
-        for orientation in ExifTags.TAGS.keys():
-            if ExifTags.TAGS[orientation]=='Orientation':
-                break
-            exif=dict(image._getexif().items())
-    
-        if exif[orientation] == 3:
-            print('ROTATING 180')
-            image=image.rotate(180, expand=True)
-        elif exif[orientation] == 6:
-            print('ROTATING 270')
-            image=image.rotate(270, expand=True)
-        elif exif[orientation] == 8:
-            print('ROTATING 90')
-            image=image.rotate(90, expand=True)
-        image.save(filepath)
-        image.close()
-    except (AttributeError, KeyError, IndexError):
-    # cases: image don't have getexif   
-        pass
-    return(image)
 
 
 #Art Magic MVP find_matches
@@ -123,23 +90,23 @@ def index():
             # Check and rotate cellphone image
             img_file = rotate_image(imgurl) ###what am I passing in? 
             # Process image for model input
-            img = keras_image.load_img(imgurl, target_size=(224, 224))
-            img = keras_image.img_to_array(img)
-            img = np.expand_dims(img, axis=0)
-            # Prepare the image for the model
-            #processed_image = vgg16.preprocess_input(img.copy())           
+            original = keras_image.load_img(imgurl, target_size=(224, 224))
+            np_img = keras_image.img_to_array(original)
+            img_batch = np.expand_dims(np_img, axis=0)
+            processed_image = vgg16.preprocess_input(img_batch.copy())           
             
             global graph
             #graph = tf.get_default_graph()
             with graph.as_default():
-                pred=model.predict(img)
-            matches=find_matches(pred, collection_features, files_and_titles['imgfile'])
+                pred = model.predict(processed_image)
+            results = similarity(pred, collection_features)
+            top_10_matches = top_matches(results, files_and_titles[1], 10) #files_and_titles['imgfile'])
             
-            showresults=files_and_titles.set_index('imgfile',drop=False).join(matches.set_index('imgfile'))
-            showresults.sort_values(by='simscore',ascending=True,inplace=True)
+            #showresults=files_and_titles.set_index('imgfile',drop=False).join(matches.set_index('imgfile'))
+            #showresults.sort_values(by='simscore',ascending=True,inplace=True)
 
             original_url = img_name
-            return flask.render_template('results.html',matches=showresults,original=original_url)
+            return flask.render_template('results.html', matches = top_10_matches[1], original = top_10_matches[0])
         flask.flash('Upload only image files')
 
         
