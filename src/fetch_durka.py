@@ -202,6 +202,8 @@ def durka():
     combined_df, combined_imgs = load_RG_data()
     #num_images = len(glob.glob1('/Users/bil2ab/galvanize/RG5kimages/','*.jpg'))
     image_path_list = combined_imgs.ImageUrl
+    #Pickle image urls
+    image_path_list.to_pickle('/data/fetch_img_urls.pkl', compression='gzip')
     feature_matrix = np.zeros((140741,4096))
     
     model = vgg16.VGG16(include_top = True, weights = 'imagenet')
@@ -215,8 +217,8 @@ def durka():
         processed_image = vgg16.preprocess_input(image_batch.copy())
         feature_matrix[idx] = model.predict(processed_image)
     
-    #Save csv of image urls
-    image_path_list.to_pickle('/data/fetch_img_urls.pkl', compression='gzip')
+    #Pickle image urls
+    #image_path_list.to_pickle('/data/fetch_img_urls.pkl', compression='gzip')
     
     #Save list of feature arrays as numpy data file
     #doggie = np.asarray(feature_array_list)
