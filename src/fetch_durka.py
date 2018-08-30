@@ -11,7 +11,7 @@ import urllib.request
 #from PIL.ExifTags import TAGS
 import PIL.Image
 import PIL
-from PIL import Image
+from PIL import Image, ImageFile
 import time
 import requests
 from io import BytesIO
