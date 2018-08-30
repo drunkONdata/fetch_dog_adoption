@@ -17,7 +17,7 @@ def durka():
     start = time.time()
     #combined_df, combined_imgs = load_RG_data()
     #num_images = len(glob.glob1('/Users/bil2ab/galvanize/RG5kimages/','*.jpg'))
-    image_path_list = pd.read_pickle('./fetch_dog_adoption/data/fetch_img_urls.pkl', compression='gzip')
+    image_path_list = pd.read_pickle('../data/fetch_img_urls.pkl', compression='gzip')
     feature_matrix = np.zeros((140741,4096))
     
     model = vgg16.VGG16(include_top = True, weights = 'imagenet')
