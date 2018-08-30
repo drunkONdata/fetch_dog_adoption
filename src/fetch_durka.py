@@ -7,10 +7,14 @@ import tensorflow as tf
 #import requests 
 #import json
 #from IPython.display import display, Image
-#import urllib.request
+import urllib.request
 #from PIL.ExifTags import TAGS
 import PIL.Image
 import time
+import requests
+from io import BytesIO
+import io
+
 
 def durka():
    
@@ -25,8 +29,14 @@ def durka():
     model.layers.pop()
     model.outputs = [model.layers[-1].output]
 
-    for idx,url in enumerate(image_path_list.tolist()):    
-        dog = load_img('https://s3-us-west-2.amazonaws.com/hole-in-a-bucket/data/'+url, target_size=(224, 224))
+    for idx,img_name in enumerate(image_path_list.tolist()):    
+        URL ='https://s3-us-west-2.amazonaws.com/hole-in-a-bucket/data/'+img_name
+        
+        with urllib.request.urlopen(URL) as url_open:
+            f = io.BytesIO(url_open.read())
+
+        img = Image.open(f)       
+        dog = load_img(img, target_size=(224, 224))
         image_batch = np.expand_dims(img_to_array(dog), axis=0)  
         processed_image = vgg16.preprocess_input(image_batch.copy())
         feature_matrix[idx] = model.predict(processed_image)
