@@ -15,7 +15,7 @@ from PIL.ExifTags import TAGS
 import PIL.Image
 import time
 from geopy.geocoders import Nominatim
-
+import zipfile
 
 
 def extract_image_url(pd_series):
@@ -70,6 +70,11 @@ def load_RG_data():
     INPUT: None
     OUTPUT: Returns 2 dataframes, one of image URLs and other of other info
     '''
+    #https://drive.google.com/open?id=1Q16HK3A93_6C-D_96-AUwwKWWf4ruBav
+    zip_images = zipfile.ZipFile('/data/images.zip', 'r')
+    zip_images.extractall('/data/')
+    zip_images.close()
+    
     df0, image0 = extract_df('/data/h9DH7711_newpets_1.json')
     df1, image1 = extract_df('/data/h9DH7711_pets_1.json')
     df2, image2 = extract_df('/data/h9DH7711_pets_2.json')
@@ -206,7 +211,7 @@ def durka():
         feature_matrix[idx] = model.predict(processed_image)
     
     #Save csv of image urls
-    image_path_list.to_csv('/data/fetch_img_urls.csv')
+    image_path_list.to_pickle('/data/fetch_img_urls.pkl', compression='gzip')
     
     #Save list of feature arrays as numpy data file
     #doggie = np.asarray(feature_array_list)
