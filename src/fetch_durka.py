@@ -204,6 +204,11 @@ def durka():
     image_path_list = combined_imgs.ImageUrl
     feature_matrix = np.zeros((140741,4096))
     
+    model = vgg16.VGG16(include_top = True, weights = 'imagenet')
+    model.layers.pop()
+    model.layers.pop()
+    model.outputs = [model.layers[-1].output]
+
     for idx,url in enumerate(image_path_list.tolist()[0:140741]):
         dog = load_img('/data/images/'+url.split('/')[-1], target_size=(224, 224))
         image_batch = np.expand_dims(img_to_array(dog), axis=0)  
