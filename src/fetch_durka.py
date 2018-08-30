@@ -9,7 +9,7 @@ import tensorflow as tf
 #from IPython.display import display, Image
 #import urllib.request
 #from PIL.ExifTags import TAGS
-#import PIL.Image
+import PIL.Image
 import time
 
 def durka():
