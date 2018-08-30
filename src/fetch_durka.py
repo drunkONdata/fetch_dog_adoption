@@ -6,7 +6,7 @@ from keras.applications.imagenet_utils import decode_predictions
 import tensorflow as tf
 #import requests 
 #import json
-from IPython.display import display, Image
+#from IPython.display import display, Image
 #import urllib.request
 #from PIL.ExifTags import TAGS
 #import PIL.Image
