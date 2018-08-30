@@ -19,7 +19,7 @@ import io
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def durka():
-   
+    
     start = time.time()
     #combined_df, combined_imgs = load_RG_data()
     #num_images = len(glob.glob1('/Users/bil2ab/galvanize/RG5kimages/','*.jpg'))
@@ -42,7 +42,7 @@ def durka():
         image_batch = np.expand_dims(img_to_array(dog), axis=0)  
         processed_image = vgg16.preprocess_input(image_batch.copy())
         feature_matrix[idx] = model.predict(processed_image)
-      
+        print('File Processed: '+str(idx))
     #Save list of feature arrays as compressed numpy data file
     #doggie = np.asarray(feature_array_list)
     #np.save('/data/fetch_feature_matrix', feature_matrix)
