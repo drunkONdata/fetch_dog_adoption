@@ -10,6 +10,8 @@ import tensorflow as tf
 import urllib.request
 #from PIL.ExifTags import TAGS
 import PIL.Image
+import PIL
+from PIL import Image
 import time
 import requests
 from io import BytesIO
