@@ -4,12 +4,12 @@ from keras.applications import vgg16
 from keras.preprocessing.image import load_img, img_to_array
 from keras.applications.imagenet_utils import decode_predictions
 import tensorflow as tf
-import requests 
-import json
+#import requests 
+#import json
 from IPython.display import display, Image
-import urllib.request
-from PIL.ExifTags import TAGS
-import PIL.Image
+#import urllib.request
+#from PIL.ExifTags import TAGS
+#import PIL.Image
 import time
 
 def durka():
