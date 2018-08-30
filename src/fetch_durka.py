@@ -16,7 +16,7 @@ import time
 import requests
 from io import BytesIO
 import io
-
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def durka():
    
