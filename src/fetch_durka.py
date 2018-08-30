@@ -38,7 +38,7 @@ def durka():
             f = io.BytesIO(url_open.read())
 
         #img = Image.open(f)       
-        dog = load_img(f target_size=(224, 224))
+        dog = load_img(f, target_size=(224, 224))
         image_batch = np.expand_dims(img_to_array(dog), axis=0)  
         processed_image = vgg16.preprocess_input(image_batch.copy())
         feature_matrix[idx] = model.predict(processed_image)
