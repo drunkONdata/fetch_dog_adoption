@@ -199,30 +199,26 @@ def display_top_matches(top_dogs):
 def durka():
    
     start = time.time()
-    combined_df, combined_imgs = load_RG_data()
+    #combined_df, combined_imgs = load_RG_data()
     #num_images = len(glob.glob1('/Users/bil2ab/galvanize/RG5kimages/','*.jpg'))
-    image_path_list = combined_imgs.ImageUrl
-    #Pickle image urls
-    image_path_list.to_pickle('/data/fetch_img_urls.pkl', compression='gzip')
-    feature_matrix = np.zeros((139916,4096))
+    image_path_list = pd.read_pickle('data/fetch_img_urls.pkl', compression='gzip')
+    feature_matrix = np.zeros((140741,4096))
     
     model = vgg16.VGG16(include_top = True, weights = 'imagenet')
     model.layers.pop()
     model.layers.pop()
     model.outputs = [model.layers[-1].output]
 
-    for idx,url in enumerate(image_path_list.tolist()[0:139916]):
-        dog = load_img('/data/images/'+url.split('/')[-1], target_size=(224, 224))
+    for idx,url in enumerate(image_path_list.tolist()):    
+        dog = load_img('data/images/'+url, target_size=(224, 224))
         image_batch = np.expand_dims(img_to_array(dog), axis=0)  
         processed_image = vgg16.preprocess_input(image_batch.copy())
         feature_matrix[idx] = model.predict(processed_image)
-    
-    #Pickle image urls
-    #image_path_list.to_pickle('/data/fetch_img_urls.pkl', compression='gzip')
-    
-    #Save list of feature arrays as numpy data file
+      
+    #Save list of feature arrays as compressed numpy data file
     #doggie = np.asarray(feature_array_list)
     np.save('/data/fetch_feature_matrix', feature_matrix)
+    #np.savez_compressed('/data/fetch_feature_matrix', feature_matrix)
     
     end = time.time()
     print('Total Time: '+str(end-start))
