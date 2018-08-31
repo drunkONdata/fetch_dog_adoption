@@ -23,10 +23,10 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def run_durka():
     image_path_list = pd.read_pickle('../data/fetch_img_urls.pkl', compression='gzip')
-    feature_matrix = np.zeros((10,4096))
+    feature_matrix = np.zeros((len(image_path_list),4096))
     model = initialize_neural_network()
 
-    for idx,img in enumerate(image_path_list[0:10]):
+    for idx,img in enumerate(image_path_list):
         feature_matrix[idx] = vectorize_image(img, model)
     #pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
     #outputs = pool.map(lambda l: vectorize_image(l,model), image_path_list.tolist())
@@ -67,7 +67,7 @@ def create_feature_matrix():
     
     image_path_list = pd.read_pickle('../data/fetch_img_urls.pkl', compression='gzip')
 
-    for idx,img_name in enumerate(image_path_list[0:10]):
+    for idx,img_name in enumerate(image_path_list):
         feature_matrix[idx] = np.load('../data/feature_vec/feature_vec_'+img_name.split('.')[0]+'.npy')
        
     end = time.time()
