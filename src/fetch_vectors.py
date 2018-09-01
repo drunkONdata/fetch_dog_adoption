@@ -16,6 +16,7 @@ import time
 import requests
 from io import BytesIO
 import io
+import boto3
 #import glob
 #import sys
 #import multiprocessing
@@ -50,10 +51,17 @@ def vectorize_image(image_name, model):
     start = time.time()
     #model = initialize_neural_network()
 
+    '''
     URL ='https://s3-us-west-2.amazonaws.com/hole-in-a-bucket/data/'+image_name
     with urllib.request.urlopen(URL) as url_open:
             f = io.BytesIO(url_open.read())
- 
+    '''
+    filepath = '/data/'+image_name
+    s3 = boto3.client('s3')
+    obj = s3.get_object(Bucket='hole-in-a-bucket', Key=filepath)
+    data = obj['Body'].read()
+    f = BytesIO(data)
+
     dog = load_img(f, target_size=(224, 224))
     image_batch = np.expand_dims(img_to_array(dog), axis=0)  
     processed_image = vgg16.preprocess_input(image_batch.copy())
@@ -65,10 +73,8 @@ def vectorize_image(image_name, model):
     #sys.stdout.flush()
     #return predictions
 
-'''
 def create_feature_matrix():
     start = time.time()
-    
     image_path_list = pd.read_pickle('../data/fetch_img_urls.pkl', compression='gzip')
 
     for idx,img_name in enumerate(image_path_list):
@@ -76,5 +82,5 @@ def create_feature_matrix():
        
     end = time.time()
     print('Features matrix created. Time: '+str(end-start))
-    
-'''
+
+
