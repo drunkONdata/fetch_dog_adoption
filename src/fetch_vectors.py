@@ -18,7 +18,7 @@ from io import BytesIO
 import io
 import boto3
 #import glob
-#import sys
+import sys
 #import multiprocessing
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -50,7 +50,6 @@ def initialize_neural_network():
 def vectorize_image(image_name, model):
     start = time.time()
     #model = initialize_neural_network()
-
     '''
     URL ='https://s3-us-west-2.amazonaws.com/hole-in-a-bucket/data/'+image_name
     with urllib.request.urlopen(URL) as url_open:
@@ -67,20 +66,21 @@ def vectorize_image(image_name, model):
     processed_image = vgg16.preprocess_input(image_batch.copy())
     predictions = model.predict(processed_image)
     np.save('../data/feature_vec/feature_vec_'+image_name.split('.')[0], predictions)            
-           
+
     end = time.time()
     print('Features vectorized for '+image_name+'   Time: '+str(end-start))
-    #sys.stdout.flush()
+    sys.stdout.flush()
     #return predictions
 
 def create_feature_matrix():
     start = time.time()
     image_path_list = pd.read_pickle('../data/fetch_img_urls.pkl', compression='gzip')
+    feature_matrix = np.zeros((len(image_path_list),4096))
 
     for idx,img_name in enumerate(image_path_list):
         feature_matrix[idx] = np.load('../data/feature_vec/feature_vec_'+img_name.split('.')[0]+'.npy')
+        if idx%1000 == 0:
+            print(str(idx)+' vectors merged to feature matrix.')
        
     end = time.time()
     print('Features matrix created. Time: '+str(end-start))
-
-
