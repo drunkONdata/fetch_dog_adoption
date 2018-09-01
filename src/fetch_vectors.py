@@ -22,13 +22,13 @@ import io
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
-def run_durka():
+def run_durka(length):
     image_path_list = pd.read_pickle('../data/fetch_img_urls.pkl', compression='gzip')
     #feature_matrix = np.zeros((len(image_path_list),4096))
     #start = len(glob.glob1('../data/feature_vec/','*.jpg'))
     model = initialize_neural_network()
 
-    for idx,img in enumerate(image_path_list[3279:len(image_path_list)]):
+    for idx,img in enumerate(image_path_list[length:len(image_path_list)]):
         #feature_matrix[idx] = vectorize_image(img, model)
         vectorize_image(img, model)
     #pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
