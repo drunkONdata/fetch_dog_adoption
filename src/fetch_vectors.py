@@ -18,7 +18,7 @@ from io import BytesIO
 import io
 import boto3
 #import glob
-import sys
+#import sys
 #import multiprocessing
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -50,7 +50,7 @@ def initialize_neural_network():
 def vectorize_image(image_name, model):
     start = time.time()
     #model = initialize_neural_network()
-    '''
+   
     URL ='https://s3-us-west-2.amazonaws.com/hole-in-a-bucket/data/'+image_name
     with urllib.request.urlopen(URL) as url_open:
             f = io.BytesIO(url_open.read())
@@ -60,6 +60,8 @@ def vectorize_image(image_name, model):
     obj = s3.get_object(Bucket='hole-in-a-bucket', Key=filepath)
     data = obj['Body'].read()
     f = BytesIO(data)
+    s3 = boto3.resource('s3', aws_access_key_id=ACCESS_ID, aws_secret_access_key= ACCESS_KEY)
+    '''
 
     dog = load_img(f, target_size=(224, 224))
     image_batch = np.expand_dims(img_to_array(dog), axis=0)  
@@ -69,7 +71,7 @@ def vectorize_image(image_name, model):
 
     end = time.time()
     print('Features vectorized for '+image_name+'   Time: '+str(end-start))
-    sys.stdout.flush()
+    #sys.stdout.flush()
     #return predictions
 
 def create_feature_matrix():
