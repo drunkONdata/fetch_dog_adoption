@@ -17,6 +17,7 @@ import requests
 from io import BytesIO
 import io
 import boto3
+import os
 #import glob
 #import sys
 #import multiprocessing
