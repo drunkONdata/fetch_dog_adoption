@@ -76,9 +76,13 @@ def vectorize_image(image_name, model):
     #sys.stdout.flush()
     #return predictions
 
+def create_file_list():
+    return os.listdir('../data/feature_vec/')
+
 def create_feature_matrix():
     start = time.time()
-    image_path_list = pd.read_pickle('../data/fetch_img_urls.pkl', compression='gzip')
+    image_path_list = os.listdir('../data/feature_vec/')
+    #pd.read_pickle('../data/fetch_img_urls.pkl', compression='gzip')
     feature_matrix = np.zeros((len(image_path_list),4096))
 
     for idx,img_name in enumerate(image_path_list):
