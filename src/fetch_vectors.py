@@ -30,7 +30,7 @@ def run_durka(length):
     model = initialize_neural_network()
     #length:len(image_path_list)
 
-    for idx,img in enumerate(image_path_list[66379:66404]):
+    for idx,img in enumerate(image_path_list[length:66404]):
         #feature_matrix[idx] = vectorize_image(img, model)
         vectorize_image(img, model)
     #pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
