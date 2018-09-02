@@ -92,6 +92,6 @@ def create_feature_matrix():
         if idx%1000 == 0:
             print(str(idx)+' vectors merged to feature matrix.')
     
-    np.save('../data/feature_matrix/fetch_feature_matrix', feature_matrix   
+    np.save('../data/feature_matrix/fetch_feature_matrix', feature_matrix)
     end = time.time()
     print('Features matrix created. Time: '+str(end-start))
