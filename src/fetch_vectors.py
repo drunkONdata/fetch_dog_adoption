@@ -78,7 +78,9 @@ def vectorize_image(image_name, model):
     #return predictions
 
 def create_file_list():
-    return [f for f in os.listdir('../data/feature_vec/') if f.endswith('.npy')]
+    vector_list = [f for f in os.listdir('../data/feature_vec/') if f.endswith('.npy')]
+    np.save('../data/', vector_list)
+    return vector_list
 
 def create_feature_matrix():
     start = time.time()
