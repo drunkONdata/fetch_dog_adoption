@@ -79,8 +79,10 @@ def vectorize_image(image_name, model):
 
 def create_file_list():
     vector_list = [f for f in os.listdir('../data/feature_vec/') if f.endswith('.npy')]
-    np.save('../data/', vector_list)
-    return vector_list
+    fetch_image_names = pd.Series(vector_list)
+    fetch_image_names.to_pickle('data/fetch_vector_list.pkl', compression='gzip')
+    #np.save('../data/feature_vector_list', vector_list)
+    #return vector_list
 
 def create_feature_matrix():
     start = time.time()
