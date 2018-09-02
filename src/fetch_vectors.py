@@ -28,8 +28,9 @@ def run_durka(length):
     #feature_matrix = np.zeros((len(image_path_list),4096))
     #start = len(glob.glob1('../data/feature_vec/','*.jpg'))
     model = initialize_neural_network()
+    #length:len(image_path_list)
 
-    for idx,img in enumerate(image_path_list[length:len(image_path_list)]):
+    for idx,img in enumerate(image_path_list[39273]):
         #feature_matrix[idx] = vectorize_image(img, model)
         vectorize_image(img, model)
     #pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
@@ -67,9 +68,10 @@ def vectorize_image(image_name, model):
     image_batch = np.expand_dims(img_to_array(dog), axis=0)  
     processed_image = vgg16.preprocess_input(image_batch.copy())
     predictions = model.predict(processed_image)
-    np.save('../data/feature_vec/feature_vec_'+image_name.split('.')[0], predictions)            
+    np.save('../data/feature_vec_corrupt/feature_vec_'+image_name.split('.')[0], predictions)            
 
     end = time.time()
+    #Implement error checking for (end-start)>10secs?
     print('Features vectorized for '+image_name+'   Time: '+str(end-start))
     #sys.stdout.flush()
     #return predictions
