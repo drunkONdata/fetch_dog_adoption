@@ -78,11 +78,11 @@ def vectorize_image(image_name, model):
     #return predictions
 
 def create_file_list():
-    return os.listdir('../data/feature_vec/')
+    return [f for f in os.listdir('../data/feature_vec/') if f.endswith('.npy')]
 
 def create_feature_matrix():
     start = time.time()
-    image_path_list = os.listdir('../data/feature_vec/')
+    image_path_list = [f for f in os.listdir('../data/feature_vec/') if f.endswith('.npy')]
     #pd.read_pickle('../data/fetch_img_urls.pkl', compression='gzip')
     feature_matrix = np.zeros((len(image_path_list),4096))
 
@@ -91,6 +91,7 @@ def create_feature_matrix():
         #feature_matrix[idx] = np.load('../data/feature_vec/feature_vec_'+img_name.split('.')[0]+'.npy')
         if idx%1000 == 0:
             print(str(idx)+' vectors merged to feature matrix.')
-       
+    
+    np.save('../data/feature_matrix/fetch_feature_matrix', feature_matrix   
     end = time.time()
     print('Features matrix created. Time: '+str(end-start))
