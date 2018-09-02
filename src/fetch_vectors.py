@@ -87,7 +87,8 @@ def create_feature_matrix():
     feature_matrix = np.zeros((len(image_path_list),4096))
 
     for idx,img_name in enumerate(image_path_list):
-        feature_matrix[idx] = np.load('../data/feature_vec/feature_vec_'+img_name.split('.')[0]+'.npy')
+        feature_matrix[idx] = np.load('../data/feature_vec/'+img_name)
+        #feature_matrix[idx] = np.load('../data/feature_vec/feature_vec_'+img_name.split('.')[0]+'.npy')
         if idx%1000 == 0:
             print(str(idx)+' vectors merged to feature matrix.')
        
