@@ -26,14 +26,12 @@ by GPS coordinates extracted from the image's EXIF Tag data. The hope is that Fe
 streamlining the adoption process. 
 
 The similar dogs are presented determined by cosine similarity distance metric between a vectorized user image and a feature 
-matrix of all vectorized images of adopted dogs. Images are vectorized by a modified VGG16 convoluted neural network with the 
-last couple layers removed (softmax and one FC layer) and ImageNet weights loaded. 
+matrix of all vectorized images of adopted dogs. Images are vectorized by a modified VGG16 convoluted neural network and 
+ImageNet weights loaded. 
 
 ## Gathering & Cleaning Data
 
-Using the [GitHub GraphQL API v4](https://developer.github.com/v4/) I performed query to search for Python repositories.
-To ensure that only high quality Python code is used to train the RNN, I limited the search to repositories with over
-1000 stars. The query results are an stored on Amazon Aurora Relational Database with the following columns:
+Data was gathered from RescueGroups.org as JSON files. 
 
 * Repository Name
 * Owner
@@ -49,7 +47,7 @@ After the repository metadata is collected I use [GitPython](https://github.com/
 the repository to an Amazon AWS EC2 instance. Non-Python files are deleted to save space, since the RNN is only trained on
 and predicts Python code.
 
-In total, the corpus consists of 2.4Gb of data totaling 185,580 .py files containing 400,383 lines, 1,337,590 words, 16,056,221 characters of code
+In total, the image corpus consisted of 14.3Gb of data totaling 146,185 images of 48,784 dogs.
 
 ## Data Preparation
 The RNN is trained on a sequence of 100 characters. Training was performed on an [g2.8xlarge AWS EC2 instance](https://aws.amazon.com/ec2/instance-types/),
@@ -67,17 +65,69 @@ During training, batches are generated as follows:
 
 ## Modeling
 
-The model consists of 4 fully connected layers of 512 LSTM units each. Between each LSTM layer are layers of 512 dropout nodes
+The modified VGG16 model consists of an input layer were a 224x224 image is inputted 4 fully connected layers of 512 LSTM units each. Between each LSTM layer are layers of 512 dropout nodes
 with a dropout probability of 0.2 for regularization, to prevent overfitting. Finally there is a layer of 100 nodes, one for each character in the vocabulary. Finally there is a softmax node to create a probability distribution of the characters. 
-![RNN Architecture Image](./images/model.png "RNN Architecture")
+```
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         (None, 224, 224, 3)       0         
+_________________________________________________________________
+block1_conv1 (Conv2D)        (None, 224, 224, 64)      1792      
+_________________________________________________________________
+block1_conv2 (Conv2D)        (None, 224, 224, 64)      36928     
+_________________________________________________________________
+block1_pool (MaxPooling2D)   (None, 112, 112, 64)      0         
+_________________________________________________________________
+block2_conv1 (Conv2D)        (None, 112, 112, 128)     73856     
+_________________________________________________________________
+block2_conv2 (Conv2D)        (None, 112, 112, 128)     147584    
+_________________________________________________________________
+block2_pool (MaxPooling2D)   (None, 56, 56, 128)       0         
+_________________________________________________________________
+block3_conv1 (Conv2D)        (None, 56, 56, 256)       295168    
+_________________________________________________________________
+block3_conv2 (Conv2D)        (None, 56, 56, 256)       590080    
+_________________________________________________________________
+block3_conv3 (Conv2D)        (None, 56, 56, 256)       590080    
+_________________________________________________________________
+block3_pool (MaxPooling2D)   (None, 28, 28, 256)       0         
+_________________________________________________________________
+block4_conv1 (Conv2D)        (None, 28, 28, 512)       1180160   
+_________________________________________________________________
+block4_conv2 (Conv2D)        (None, 28, 28, 512)       2359808   
+_________________________________________________________________
+block4_conv3 (Conv2D)        (None, 28, 28, 512)       2359808   
+_________________________________________________________________
+block4_pool (MaxPooling2D)   (None, 14, 14, 512)       0         
+_________________________________________________________________
+block5_conv1 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_conv2 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_conv3 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_pool (MaxPooling2D)   (None, 7, 7, 512)         0         
+_________________________________________________________________
+flatten (Flatten)            (None, 25088)             0         
+_________________________________________________________________
+fc1 (Dense)                  (None, 4096)              102764544 
+=================================================================
+Total params: 117,479,232
+Trainable params: 117,479,232
+Non-trainable params: 0
+_________________________________________________________________
+```
+
+
 
 ## Usage
 
-Clone this repository with the command
+Clone this repository with the following command:
 ```
-git clone https://github.com/kevinafrica/pycodecomplete.git
+git clone https://github.com/drunkONdata/fetch_dog_adoption.git
 ```
-The repository has the following structure. GitHub scraping and cleaning are located in the ./pycodecomplete/scraping folder. Code for RNN models and training are contained in the ./pycodecomplete/ml folder. Flask website application files are located in the ./pycodecomplete/webapp folder
+The repository has the following file structure. 
 ```
 .
 ├── LICENSE
@@ -151,6 +201,7 @@ Finally once a model is complete you can start the flask app with the command:
 
 ## Tech Stack
 
+NumPy, SciPy, Pandas, AWS, S3, EC2, VisPy, Flask, Keras, TensorFlow, ImageNet
 <img src="https://www.python.org/static/community_logos/python-logo-master-v3-TM.png" width="250">
 <img src="https://s3.amazonaws.com/keras.io/img/keras-logo-2018-large-1200.png" width="250">
 <img src="https://kaggle2.blob.core.windows.net/competitions/kaggle/3428/media/scikit-learn-logo.png" width="250">
