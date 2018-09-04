@@ -1,5 +1,4 @@
-# Fetch! The dog adoption app
-
+# Fetch! the dog adoption app
 A dog adoption application, where a user submits a picture of a dog and curated list of similar looking dogs that are available for adoption nearby. 
 
 ## Table of Contents
@@ -22,10 +21,10 @@ Fetch! is on a mission to make it easier for people to find their canine best fr
 ## Product
 The interface for Fetch allows a user to upload an image of a dog and recieve Top 10 most similar looking dogs available for 
 adoption. By default, location is not enabled for privacy reasons. Once turned ON, location is determined via IP address or 
-by GPS coordinates extracted from the image's EXIF Tag data. The hope is that Fetch will increase the number of adoptions by 
+by GPS coordinates extracted from the image's EXIF data. The hope is that Fetch will increase the number of adoptions by 
 streamlining the adoption process. 
 
-The similar dogs are presented determined by cosine similarity distance metric between a vectorized user image and a feature 
+The matches are determined by a cosine similarity distance metric between a vectorized user submitted image and a feature 
 matrix of all vectorized images of adopted dogs. Images are vectorized by a modified VGG16 convoluted neural network and 
 ImageNet weights loaded. 
 
