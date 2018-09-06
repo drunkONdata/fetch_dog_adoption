@@ -13,15 +13,15 @@ exceeding 150k+ images of 45k+ dogs, Fetch provides users a curated list of the 
 7. [License](#license)
 
 ## Motivation
-According to the ASPCA, over 1.7 million pets are euthanized per year. A good potion of which are healthy enough to be 
+According to the ASPCA, over 1.7 million pets are euthanized per year. A good portion of which are healthy enough to be 
 be rehomed. Besides the moral case, costs of euthansia range between $500-$700 per pet according to the American Veterinary 
 Medical Association (AVMA). This is a potential loss of $1.2 billion dollars for taxpayers who foot the bill for these costs.
 
 ## Product Details
 Fetch allows a user to upload an image of a dog and recieve Top 10 most similar looking dogs available for adoption. By default, 
 location is not enabled for privacy reasons. Once turned 'ON', location is determined via IP address or by GPS coordinates 
-extracted from the image's EXIF data. The hope is that Fetch will increase the number of adoptions by streamlining the 
-access to adoption information. 
+extracted from the image's EXIF data. The hope is that Fetch will increase the number of adoptions by streamlining access 
+to adoption information. 
 
 The matches are determined by a cosine similarity between a vectorized user submitted image and a feature 
 matrix of all vectorized images of adopted dogs. Images are vectorized by a modified VGG16 convoluted neural network with 
@@ -29,8 +29,8 @@ ImageNet weights loaded. Cosine similarity is the distance metric of choice afte
 validation survey which showed a 89.4% preference for it. 
 
 ## Data Preparation
-Data was gathered from RescueGroups.org as JSON files. In total, the image corpus consisted of 14.3Gb of data totaling 
-152,185 images of 48,784 dogs. Of the  features we concentrated on were:
+Data was gathered from RescueGroups.org as JSON files. In total, the image dataset consisted of 14.3Gb of data totaling 
+152,185 images of 48,784 dogs. Of the features we concentrated on were:
 
 * AnimalID
 * OrgID
@@ -38,7 +38,6 @@ Data was gathered from RescueGroups.org as JSON files. In total, the image corpu
 * Breed
 * animalLocation
 * pictureUrl
-
 
 ## Model
 The modified VGG16 model consists of an input layer were a 224x224 image is recieved, 13 Conv2D layers, 5 MaxPooling2D layers 
@@ -108,8 +107,6 @@ The repository has the following file structure.
 ├── LICENSE
 ├── README.md
 ├── data
-│   ├── fetch_feature_matrix.npy
-│   ├── fetch_vector_list.pkl
 │   ├── images
 │   ├── json
 │   └── old_data
@@ -142,23 +139,8 @@ The repository has the following file structure.
     │   │   ├── glyphicons-halflings-regular.ttf
     │   │   └── glyphicons-halflings-regular.woff
     │   ├── img
-    │   │   ├── camera.png
-    │   │   ├── dog_icon.png
-    │   │   ├── fetch_logo.png
-    │   │   ├── gear.png
-    │   │   └── ipad-hand.png
     │   ├── js
-    │   │   ├── bookshelf.js
-    │   │   ├── bootstrap.min.js
-    │   │   ├── index.js
-    │   │   └── table.js
     │   └── temp
-    │       ├── data
-    │       │   ├── doggie_features_4750.npy
-    │       │   └── img_urls.csv
-    │       └── upload
-    │           ├── Screen_Shot_2018-08-24_at_6.34.34_AM.png
-    │           └── Screen_Shot_2018-08-24_at_7.02.29_AM.png
     └── templates
         ├── index.html
         ├── index_bootstrap.html
