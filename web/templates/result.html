@@ -1,0 +1,52 @@
+
+<title> Fetch! Dog Adoption </title>
+
+
+  <div class="col-lg-4 col-xs-12">
+  <form method="POST" action='/' enctype = "multipart/form-data">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button class="btn-lg btn-primary" input type="submit">Fetch!</button>
+      </span>
+      <input type = "file" name = "file">
+
+
+    </div><!-- /input-group -->
+    </form>
+  </div><!-- /.col-lg-6 -->
+
+
+
+<div class="row">
+  <div class="column">
+    <img src={{matches['image_url'][0]}}>
+    <img src={{matches['image_url'][1]}}>
+  </div>
+  <div class="column">
+    <img class="userpic" src={{original}}>
+    <img src={{matches['image_url'][2]}}>
+  </div>
+  <div class="column">
+    <img src={{matches['image_url'][3]}}>
+    <img src={{matches['image_url'][4]}}>
+  </div>
+</div>
+<div class="row">
+  <div class="column">
+    <img src={{matches['image_url'][5]}}>
+    <img src={{matches['image_url'][6]}}>
+  </div>
+  <div class="column">
+    <img src={{matches['image_url'][7]}}>
+    <img src={{matches['image_url'][8]}}>
+    </a>
+  </div>
+  <div class="column">
+    <img src={{matches['image_url'][9]}}>
+    <img src={{matches['image_url'][10]}}>
+  </div>
+</div>
+
+</body>
+
+<script type="text/javascript" src="/static/js/index.js"></script>

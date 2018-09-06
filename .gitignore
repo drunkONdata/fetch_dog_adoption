@@ -1,6 +1,9 @@
 #Fetch Data
 /data/*
 .DS_Store
+*.npy
+*.pkl
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

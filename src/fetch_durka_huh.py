@@ -50,6 +50,11 @@ class feature_extraction():
     def merge_features(self, )
 
 
+        s3 = boto3.client('s3')
+        resp = s3.get_object(bucket='hole-in-a-bucket', key='./data/'+img_name)
+        f = io.BytesIO(resp['Body'].read())
+
+        s3.put_object(Bucket='hole-in-a-bucket', key='./data/'+img_name, Body = data#type=bytes)
 
 
         start = time.time()

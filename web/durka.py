@@ -1,6 +1,8 @@
 import os
+import flask
 from flask import Flask, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
+import werkzeug
 
 
 import numpy as np
@@ -17,9 +19,9 @@ from numpy.linalg import norm
 
 #from artmagic import app
 #from artmagic.models.similarity import find_matches
-from src.fetch_data_pipeline import rotate_image, similarity, top_matches
-from src.fetch_data_processing import initialize_neural_network
-from src.fetch_web import vectorize_image, similarity
+#from src.fetch_data_pipeline import rotate_image, similarity, top_matches
+#from src.fetch_data_processing import initialize_neural_network
+#from src.fetch_web import vectorize_image, similarity
 
 # Set up filepath to store user submitted photo
 UPLOAD_FOLDER = '/Users/bil2ab/galvanize/fetch_dog_adoption/web/static/temp/upload'
@@ -31,32 +33,60 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 #app.config['DATA_FOLDER'] = DATA_FOLDER
 
 # Load Data
-feature_matrix = np.load('/data/fetch_feature_matrix.npy')
-vector_list = pd.read_pickle('/data/fetch_vector_list.pkl', compression='gzip')
+vector_list = pd.read_pickle('fetch_vector_list.pkl', compression='gzip')
+feature_matrix = np.load('fetch_feature_matrix.npy')
 #collection_features = np.load(os.path.join(app.config['DATA_FOLDER'], 'fetch_feature_matrix.npy'))
 #files_and_titles=pd.read_csv(os.path.join(app.config['DATA_FOLDER'], 'img_urls.csv'))                           
 
+def initialize_neural_network():
+    model = VGG16(include_top = True, weights = 'imagenet')
+    model.layers.pop()
+    model.layers.pop()
+    model.outputs = [model.layers[-1].output]
+    return model
+
 # Initialize neural network with classification layer and fully connected layer dropped
-model = fetch_vectors.initialize_neural_network()
+model = initialize_neural_network()
 
 # Verify file extension of user submitted photo    
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
-#Art Magic MVP find_matches
-def find_matches(pred, collection_features, images):
-    pred = pred.flatten()
-    nimages = len(collection_features)
-    #vectorize cosine similarity
-    #sims= inner(pred,collection_features)/norm(pred)/norm(collection_features,axis=1)
+def top_matches(dog_vector, feature_matrix, images): 
+    pred = dog_vector.flatten()
     sims = []
-    for i in range(0,nimages):
-        sims.append(distance.cosine(pred.flatten(),collection_features[i].flatten()))
-    print('max sim = ' +str(max(sims)))
-    similar_images=pd.DataFrame({'imgfile':images,'simscore':sims})
-    return(similar_images)
+    
+    for i in range(0,len(feature_matrix)):
+        sims.append(distance.cosine(pred.flatten(), feature_matrix[i].flatten()))
+    
+    return pd.DataFrame({'imgfile':images, 'simscore':sims})
+  
+
+def rotate_image(filepath):     
+    image=Image.open(filepath)
+    try:
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation]=='Orientation':
+                break
+            exif=dict(image._getexif().items())
+    
+        if exif[orientation] == 3:
+            print('ROTATING 180')
+            image=image.rotate(180, expand=True)
+        elif exif[orientation] == 6:
+            print('ROTATING 270')
+            image=image.rotate(270, expand=True)
+        elif exif[orientation] == 8:
+            print('ROTATING 90')
+            image=image.rotate(90, expand=True)
+        image.save(filepath)
+        image.close()
+    except (AttributeError, KeyError, IndexError):
+    # cases: image don't have getexif   
+        pass
+    return(image)
+
 
 global graph
 graph = tf.get_default_graph()
@@ -81,70 +111,58 @@ def index():
         if file and allowed_file(file.filename):
             img_file = request.files.get(file)
             # Secure image
-            img_name = secure_filename(img_file.filename)
+            img_name = werkzeug.utils.secure_filename(img_file.filename)
             # Store user image in temp folder
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], img_name))
+            img_url = os.path.join(app.config['UPLOAD_FOLDER'], img_file)
+            file.save(img_url)
             # Rotate cellphone image (if needed)
-            img_file = rotate_image(os.path.join(app.config['UPLOAD_FOLDER'], img_name))
+            img_file = rotate_image(img_url)
             print('Image Rotated')
             # Process image for model input
-            dog_vector = fetch_web.vectorize_image(img_file, model)
+            #img = fetch_web.vectorize_image(img_name, model) #change to img_file when uncommenting rotate function
             # Calculate similarity
-            results = fetch_web.similarity(vector_list,dog_vector)
-
-                  
-            
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
-        
-       
-            
-            
-            
-            
-              
-            
-            
-
-            
-
-
-            #original = keras_image.load_img(imgurl, target_size=(224, 224))
-            #np_img = keras_image.img_to_array(original)
-            #img_batch = np.expand_dims(np_img, axis=0)
-            #processed_image = vgg16.preprocess_input(img_batch.copy())           
-            
+            #results = fetch_web.similarity(vector_list,dog_vector)
+                          
+            #load image for processing through the model
+            img = kimage.load_img(img_url, target_size=(224, 224))
+            img = kimage.img_to_array(img)
+            img = np.expand_dims(img, axis=0)  
+                        
             global graph
-            #graph = tf.get_default_graph()
             with graph.as_default():
-                #pred = model.predict(processed_image)
-            results = similarity(pred, collection_features)
-            top_10_matches = top_matches(results, files_and_titles[1], 10) #files_and_titles['imgfile'])
+                pred=model.predict(img)
+            matches = top_matches(pred, feature_matrix, vector_list['imgfile'])
             
-            #showresults=files_and_titles.set_index('imgfile',drop=False).join(matches.set_index('imgfile'))
-            #showresults.sort_values(by='simscore',ascending=True,inplace=True)
+            results = vector_list.set_index('imgfile', drop=False).join(matches.set_index('imgfile'))
+            results.sort_values(by='simscore', ascending=True, inplace=True)
 
             original_url = img_name
-            return flask.render_template('results.html', matches = results[0:11], original = top_10_matches[0])
+            return flask.render_template('results.html', matches=results, original=original_url)
         flask.flash('Upload only image files')
 
         
         return flask.redirect(flask.request.url)
 
-#app.secret_key = 'adam'
 
-#I was getting an error because the model was losing track of the graph
-#defining graph here lets me keep track of it later as things move around
-#
+'''
+def vectorize_image(image, model):
+    dog = load_img(image, target_size=(224, 224))
+    image_batch = np.expand_dims(img_to_array(dog), axis=0)  
+    processed_image = vgg16.preprocess_input(image_batch.copy())
+    predictions = model.predict(processed_image)
+    #np.save('../data/user_files/feature_vec_'+image_name.split('.')[0], predictions)            
+    return predictions
+
+def similarity(vector_list,predictions):
+    labels = []
+    for vector in vector_list:
+        labels.append(vector[12:].split('.')[0]+'.jpg')  
+    score = distance.cdist(predictions_a, feature_matrix, 'cosine').tolist()
+    if len(labels) != len(score[0]):
+        print('Length mismatch!')
+    sorted_scores = sorted(list(zip(labels,score[0])), key = lambda t: t[1])
+    return sorted_scores
+'''
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True, threaded=False)
