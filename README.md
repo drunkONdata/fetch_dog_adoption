@@ -1,7 +1,7 @@
 # Fetch! Dog Adoption
-Fetch is on a mission to make it easier for people to find their canine best friend. Utilizing a modified neural network, 
-the Fetch app searches for dogs to adopt that closely resemble a user submitted photo. By tapping into existing records 
-exceeding 150k+ images of 45k+ dogs, Fetch provides users a curated list of the top 10 most similar dogs for adoption. 
+Fetch is on a mission to make it easier for people to find their canine best friend. Utilizing a modified neural network, the Fetch app 
+searches for dogs to adopt that closely resemble a user submitted photo. By tapping into existing records exceeding 150k+ images 
+of 45k+ dogs, Fetch provides users a curated list of the top 10 most similar dogs for adoption. 
 
 ## Table of Contents
 1. [Motivation](#motivation)
