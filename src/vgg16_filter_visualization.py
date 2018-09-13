@@ -1,6 +1,5 @@
-'''Visualization of the filters of VGG16, via gradient ascent in input space.
-This script can run on CPU in a few minutes.
-Results example: http://i.imgur.com/4nj4KjN.jpg
+'''
+Visualization of VGG16 filters, via gradient ascent.
 '''
 from __future__ import print_function
 

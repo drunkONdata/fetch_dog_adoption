@@ -1,11 +1,11 @@
 # Fetch! Dog Adoption
 Fetch is on a mission to make it easier for people to find their canine best friend. Utilizing a modified neural network, the Fetch app 
 searches for dogs to adopt that closely resemble a user submitted photo. By tapping into existing records exceeding 150k+ images 
-of 45k+ dogs, Fetch provides users a curated list of the top 10 most similar dogs for adoption. 
+of 45k+ dogs, Fetch provides users a curated list of the top 25 most similar dogs for adoption. 
 
 ## Table of Contents
 1. [Motivation](#motivation)
-2. [Product](#product)
+2. [Product Details](#product)
 3. [Data Preparation](#data-preparation)
 4. [Model](#model)
 5. [Usage](#usage)
@@ -18,19 +18,19 @@ be rehomed. Besides the moral case, costs of euthansia range between $500-$700 p
 Medical Association (AVMA). This is a potential loss of $1.2 billion dollars for taxpayers who foot the bill for these costs.
 
 ## Product Details
-Fetch allows a user to upload an image of a dog and recieve Top 10 most similar looking dogs available for adoption. By default, 
+Fetch allows a user to upload an image of a dog and recieve a list of the most similar looking dogs available for adoption. By default, 
 location is not enabled for privacy reasons. Once turned 'ON', location is determined via IP address or by GPS coordinates 
 extracted from the image's EXIF data. The hope is that Fetch will increase the number of adoptions by streamlining access 
 to adoption information. 
 
-The matches are determined by a cosine similarity between a vectorized user submitted image and a feature 
-matrix of all vectorized images of adopted dogs. Images are vectorized by a modified VGG16 convoluted neural network with 
-ImageNet weights loaded. Cosine similarity is the distance metric of choice after recieving 350+ responses to a user 
-validation survey which showed a 89.4% preference for it. 
+The matches are determined by a cosine similarity between a vectorized user submitted image and a feature matrix of all 
+vectorized images of adopted dogs. Images are vectorized by a modified VGG16 convoluted neural network with ImageNet weights 
+loaded. Cosine similarity is the distance metric of choice after recieving 380+ responses to a user validation survey which 
+showed a 81.7% preference for it as apposed to eucleadian, manhattan, bray-curtis, chebyshev and hamming distance metrics.
 
 ## Data Preparation
 Data was gathered from RescueGroups.org as JSON files. In total, the image dataset consisted of 14.3Gb of data totaling 
-152,185 images of 48,784 dogs. Of the features we concentrated on were:
+152,185 images of 48,784 dogs. Features of interest for our application included:
 
 * AnimalID
 * OrgID
@@ -40,11 +40,12 @@ Data was gathered from RescueGroups.org as JSON files. In total, the image datas
 * pictureUrl
 
 ## Model
-The modified VGG16 model consists of an input layer were a 224x224 image is recieved, 13 Conv2D layers, 5 MaxPooling2D layers 
+The modified VGG16 model consists of an input layer were a 224x224x3 image is recieved, 13 Conv2D layers, 5 MaxPooling2D layers 
 and a dense and flatten layer left at the end. The softmax classification layer and a fully connected layer in the original 
-model was dropped for our purposes. 
+model was dropped for our purposes. This enabled us to vectorize a dog image down to a 1D array with a length of 4096 'features'. 
 
 ```
+Fetch! Model Summary:
 _________________________________________________________________
 Layer (type)                 Output Shape              Param #   
 =================================================================
@@ -105,62 +106,27 @@ The repository has the following file structure.
 ```
 .
 ├── LICENSE
-├── README.md
-├── data
-│   ├── images
-│   ├── json
-│   └── old_data
-├── notebooks
-│   ├── fetch_demo.ipynb
-│   ├── prelim_eda.ipynb
-│   └── similarity_work.ipynb
-├── src
-│   ├── autorotate_function.py
-│   ├── cnn_filter_visualization.py
-│   ├── data_pipeline.py
-│   ├── fetch_data_pipeline.py
-│   ├── fetch_data_processing.py
-│   ├── fetch_durka.py
-│   ├── fetch_durka_huh.py
-│   ├── fetch_vectors.py
-│   └── fetch_web.py
-└── web
-    ├── durka.py
-    ├── fetch_feature_matrix.npy
-    ├── fetch_vector_list.pkl
-    ├── static
-    │   ├── css
-    │   │   ├── bootstrap.css
-    │   │   ├── main.css
-    │   │   └── main_art.css
-    │   ├── fonts
-    │   │   ├── glyphicons-halflings-regular.eot
-    │   │   ├── glyphicons-halflings-regular.svg
-    │   │   ├── glyphicons-halflings-regular.ttf
-    │   │   └── glyphicons-halflings-regular.woff
-    │   ├── img
-    │   ├── js
-    │   └── temp
-    └── templates
-        ├── index.html
-        ├── index_bootstrap.html
-        ├── result.html
-        ├── result_boostrap.html
-        └── result_old.html
+├
 
 ```
 
 ## Future Work
-- Feature optimization strategies:
-    + Random Forest, Logistic Regression, SVM (per reference 1)
-    + Add latent layer to neural network and train on targeted domain with add dropout to avoid overfitting and back propagate.
+- Feature extraction optimization strategies:
+    + Scale Invarient Feature Transform (SIFT) module from OpenCV
+    + Gradient-weighted Class Activation Mapping (GradCAM) to identify most used features across all images
+    + Add latent layer to neural network and train on targeted domain with dropout & guided back propagation
     + PCA and discriminative dimensionality reduction
-- Optimize image data base performance for future scaling:
-    + Spark, DynamoDb or Redshift
-- Investigate distance metrics with further user validation
-- Investigate performance with other models:
-    + InceptionV3, ResNet50, NASNet, MobileNet, Inception Resnet V2 and Resnet101
+    + Naive clustering by finding centroids of each class in original image space
+- Investigate Faiss from Facebook Open Source for similarity modeling alternative
+- Optimize image database performance for future scaling
+- Investigate alternative distance metrics with further user validation
+- Investigate performance with other models: InceptionV3, ResNet50, NASNet, MobileNet
 - Improve web and smartphone app experience with React Native
+
+
+## References
+1. ****
+2. 
 
 ## License
 MIT License
