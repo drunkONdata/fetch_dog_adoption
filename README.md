@@ -5,19 +5,21 @@ of 45k+ dogs, Fetch provides users a curated list of the top 25 most similar dog
 
 ## Table of Contents
 1. [Motivation](#motivation)
-2. [Product Details](#product)
-3. [Data Preparation](#data-preparation)
+2. [Details](#details)
+3. [Data](#data)
 4. [Model](#model)
 5. [Usage](#usage)
 6. [Future Work](#future-work)
-7. [License](#license)
+7. [Presentation](#presentation)
+8. [References](#references)
+9. [License](#license)
 
 ## Motivation
 According to the ASPCA, over 1.7 million pets are euthanized per year. A good portion of which are healthy enough to be 
 be rehomed. Besides the moral case, costs of euthansia range between $500-$700 per pet according to the American Veterinary 
 Medical Association (AVMA). This is a potential loss of $1.2 billion dollars for taxpayers who foot the bill for these costs.
 
-## Product Details
+## Details
 Fetch allows a user to upload an image of a dog and recieve a list of the most similar looking dogs available for adoption. By default, 
 location is not enabled for privacy reasons. Once turned 'ON', location is determined via IP address or by GPS coordinates 
 extracted from the image's EXIF data. The hope is that Fetch will increase the number of adoptions by streamlining access 
@@ -28,7 +30,7 @@ vectorized images of adopted dogs. Images are vectorized by a modified VGG16 con
 loaded. Cosine similarity is the distance metric of choice after recieving 380+ responses to a user validation survey which 
 showed a 81.7% preference for it as apposed to eucleadian, manhattan, bray-curtis, chebyshev and hamming distance metrics.
 
-## Data Preparation
+## Data
 Data was gathered from RescueGroups.org as JSON files. In total, the image dataset consisted of 14.3Gb of data totaling 
 152,185 images of 48,784 dogs. Features of interest for our application included:
 
@@ -123,6 +125,8 @@ The repository has the following file structure.
 - Investigate performance with other models: InceptionV3, ResNet50, NASNet, MobileNet
 - Improve web and smartphone app experience with React Native
 
+## References
+Link to presentation slides for Fetch! Dog Adoption can be viewed here: http://bit.ly/2QoEc0B
 
 ## References
 1. ****
