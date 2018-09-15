@@ -20,10 +20,10 @@ be rehomed. Besides the moral case, costs of euthansia range between $500-$700 p
 Medical Association (AVMA). This is a potential loss of $1.2 billion dollars for taxpayers who foot the bill for these costs.
 
 ## Details
-Fetch allows a user to upload an image of a dog and recieve a list of the most similar looking dogs available for adoption. By default, 
-location is not enabled for privacy reasons. Once turned 'ON', location is determined via IP address or by GPS coordinates 
-extracted from the image's EXIF data. The hope is that Fetch will increase the number of adoptions by streamlining access 
-to adoption information. 
+Fetch allows a user to upload an image of a dog and recieve a list of the most similar looking dogs available for adoption. 
+By default, location is not enabled for privacy reasons. Once turned 'ON', location is determined via IP address or by GPS 
+coordinates extracted from the image's EXIF data. The hope is that Fetch will increase the number of adoptions by streamlining 
+access to adoption information. 
 
 The matches are determined by a cosine similarity between a vectorized user submitted image and a feature matrix of all 
 vectorized images of adopted dogs. Images are vectorized by a modified VGG16 convoluted neural network with ImageNet weights 
@@ -44,7 +44,8 @@ Data was gathered from RescueGroups.org as JSON files. In total, the image datas
 ## Model
 The modified VGG16 model consists of an input layer were a 224x224x3 image is recieved, 13 Conv2D layers, 5 MaxPooling2D layers 
 and a dense and flatten layer left at the end. The softmax classification layer and a fully connected layer in the original 
-model was dropped for our purposes. This enabled us to vectorize a dog image down to a 1D array with a length of 4096 'features'. 
+model was dropped for our purposes. This enabled us to vectorize a dog image down to a one-dimensional array with a length of 
+4096 truncated features. 
 
 ```
 Fetch! Model Summary:
@@ -115,13 +116,6 @@ The repository has the following file structure.
 │   ├── fetch_vector_list.pkl
 │   ├── images
 │   ├── json
-│   │   ├── h9DH7711_newpets_1.json
-│   │   ├── h9DH7711_orgs_1.json
-│   │   ├── h9DH7711_pets_1.json
-│   │   ├── h9DH7711_pets_2.json
-│   │   ├── h9DH7711_pets_3.json
-│   │   ├── h9DH7711_pets_4.json
-│   │   └── h9DH7711_pets_5.json
 │   └── old_data
 │       ├── fetch_feature_matrix.npy
 │       └── fetch_img_urls.pkl
@@ -193,12 +187,12 @@ The repository has the following file structure.
 - Investigate performance with other models: InceptionV3, ResNet50, NASNet, MobileNet
 - Improve web and smartphone app experience with React Native
 
-## References
+## Presentation
 Link to presentation slides for Fetch! Dog Adoption: http://bit.ly/2QoEc0B
 
 ## References
-1. ****
-2. 
+1. TBA
+2. TBA
 
 ## License
 MIT License
