@@ -126,7 +126,7 @@ The repository has the following file structure.
 - Improve web and smartphone app experience with React Native
 
 ## References
-Link to presentation slides for Fetch! Dog Adoption can be viewed here: http://bit.ly/2QoEc0B
+Link to presentation slides for Fetch! Dog Adoption: http://bit.ly/2QoEc0B
 
 ## References
 1. ****
