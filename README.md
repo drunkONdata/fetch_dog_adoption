@@ -108,7 +108,75 @@ The repository has the following file structure.
 ```
 .
 ├── LICENSE
-├
+├── README.md
+├── __init__.py
+├── data
+│   ├── fetch_feature_matrix.npy
+│   ├── fetch_vector_list.pkl
+│   ├── images
+│   ├── json
+│   │   ├── h9DH7711_newpets_1.json
+│   │   ├── h9DH7711_orgs_1.json
+│   │   ├── h9DH7711_pets_1.json
+│   │   ├── h9DH7711_pets_2.json
+│   │   ├── h9DH7711_pets_3.json
+│   │   ├── h9DH7711_pets_4.json
+│   │   └── h9DH7711_pets_5.json
+│   └── old_data
+│       ├── fetch_feature_matrix.npy
+│       └── fetch_img_urls.pkl
+├── notebooks
+│   ├── __init__.py
+│   ├── feature_extraction_OpenCV.ipynb
+│   ├── fetch_demo.ipynb
+│   ├── gradCAM.ipynb
+│   └── prelim_eda.ipynb
+├── src
+│   ├── __init__.py
+│   ├── class_development.py
+│   ├── fetch_AWS.py
+│   ├── fetch_data_pipeline.py
+│   ├── fetch_data_processing.py
+│   ├── fetch_miscellaneous.py
+│   ├── fetch_web.py
+│   ├── gradCAM.py
+│   ├── matcher.py
+│   ├── openCV_feature_extraction.py
+│   └── vgg16_filter_visualization.py
+└── web
+    ├── app.py
+    ├── durka.py
+    ├── fetch_feature_matrix.npy
+    ├── fetch_vector_list.pkl
+    ├── index_bootstrap.html
+    ├── static
+    │   ├── css
+    │   │   ├── bootstrap.css
+    │   │   ├── main.css
+    │   │   └── main_art.css
+    │   ├── fonts
+    │   │   ├── glyphicons-halflings-regular.eot
+    │   │   ├── glyphicons-halflings-regular.svg
+    │   │   ├── glyphicons-halflings-regular.ttf
+    │   │   └── glyphicons-halflings-regular.woff
+    │   ├── img
+    │   ├── js
+    │   │   ├── bookshelf.js
+    │   │   ├── bootstrap.min.js
+    │   │   ├── index.js
+    │   │   └── table.js
+    │   └── temp
+    │       ├── data
+    │       │   ├── doggie_features_4750.npy
+    │       │   └── img_urls.csv
+    │       └── upload
+    │           ├── Screen_Shot_2018-08-24_at_6.34.34_AM.png
+    │           └── Screen_Shot_2018-08-24_at_7.02.29_AM.png
+    └── templates
+        ├── index.html
+        ├── result.html
+        ├── result_boostrap.html
+        └── result_old.html
 
 ```
 
